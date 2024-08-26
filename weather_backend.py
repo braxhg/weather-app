@@ -2,10 +2,22 @@ import requests
 
 def get_location_data(data):
     
+    # Access alerts field
+    alerts = data.get("alerts", {}).get("alert", [])
+    
+    if alerts:
+        a_event = alerts[0].get("event", "No weather alert.")
+        a_severity = alerts[0].get("severity", "")
+    else:
+        a_event = "No alerts"
+        a_severity = "N/A"
+    
     return {
 
         "city": data["location"]["name"],
-        "state": data["location"]["region"]
+        "state": data["location"]["region"],
+        "w_alert": a_event,
+        "w_severity": a_severity
     }
 
 # Obtain weather data
