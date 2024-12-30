@@ -1,4 +1,7 @@
 import requests
+from api import define_api
+
+api_key = define_api()
 
 def get_location_data(data):
     
@@ -22,8 +25,7 @@ def get_location_data(data):
 
 # Obtain weather data
 def get_current(current):
-    API_TOKEN = "18550c6d76c64aef84a55339240308"
-    API_URL = f"http://api.weatherapi.com/v1/current.json?key={API_TOKEN}&q={str(current)}&aqi=no"
+    API_URL = f"http://api.weatherapi.com/v1/current.json?key={api_key}&q={str(current)}&aqi=no"
     response = requests.get(API_URL)
 
     if response.status_code == 200:
@@ -41,20 +43,20 @@ def get_current(current):
             "wind_s": data["current"]["wind_mph"],
             "condition": data["current"]["condition"]["text"],
             "feelslike": data["current"]["feelslike_f"],
-            "icon": data["current"]["condition"]["icon"]
+            "icon": data["current"]["condition"]["icon"],
+            "status": data["current"]["condition"]["text"]
         }
     else:
         print("Error: Cannot obtain weather data.\nStatus code: ", response.status_code)
         return None
 
 def get_forecast(forecast):
-    API_TOKEN = "18550c6d76c64aef84a55339240308"
-    API_URL = f"http://api.weatherapi.com/v1/forecast.json?key={API_TOKEN}&q={str(forecast)}&days=2&aqi=no&alerts=yes"
+    API_URL = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={str(forecast)}&days=2&aqi=no&alerts=yes"
     response = requests.get(API_URL)
 
     if response.status_code == 200:
         data = response.json()
-        #print("Forecast data: ", data)
+        #print("Forecast data: ", data) # Debug
         location_data = get_location_data(data)
         date_only = data["forecast"]["forecastday"][1]["date"].split(" ")[0]
         #print("Parsed data: ", date_only) # Debug
@@ -72,14 +74,3 @@ def get_forecast(forecast):
         print("Error: Cannot obtain weather data.\nStatus code: ", response.status_code)
         return None
     
-# Test block to run the functions directly
-"""
-if __name__ == "__main__":
-    print("Testing get_current:")
-    current_weather = get_current("29108")  # Replace "10001" with any valid zip code or location
-    print("Output of get_current:", current_weather)
-
-    print("\nTesting get_forecast:")
-    forecast_weather = get_forecast("29108")  # Replace "10001" with any valid zip code or location
-    print("Output of get_forecast:", forecast_weather)
-"""
