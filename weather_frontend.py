@@ -7,8 +7,8 @@ from PIL import Image, ImageTk
 from weather_backend import get_current
 from weather_backend import get_forecast
 
-# Function to update GUI with weather data
-def get_current_weather():
+# Update GUI with weather data
+def show_current():
     current = location_entry.get()  # Get location from entry box
     data = get_current(current)  # Pass location to backend and get data
     if data:
@@ -21,7 +21,7 @@ def get_current_weather():
             f"Wind Speed:  {data['wind_s']} mph\n"
             f"Condition:  {data['condition']}\n\n"
             f"Weather Alert: {data['w_alert']}\n"
-            f"Severity: {data['w_severity']}")
+            f"Severity: {data['w_severity']}\n")
 
         # Fetch icon
         icon_url = "http:" + data['icon']
@@ -39,7 +39,7 @@ def get_current_weather():
     else:
         result_label.config(text="Location not found.")
 
-def get_forecast_weather():
+def show_forecast():
     forecast = location_entry.get() # Get location from entry box
     data = get_forecast(forecast)
 
@@ -55,7 +55,7 @@ def get_forecast_weather():
             f"Severity: {data['w_severity']}")
 
         # Fetch icon
-        icon_url = "http:" + data['ficon']
+        icon_url = f"http:{data['ficon']}"
         response = requests.get(icon_url)
 
         if response.status_code == 200:
@@ -82,16 +82,16 @@ top_frame.pack(pady=10)
 label = tk.Label(root, text="Enter Zip Code: ")
 label.pack(pady=10)
 
-# Entry box for zip
+# Entry box for ZIP code
 location_entry = tk.Entry(root)
 location_entry.pack(pady=5)
 
 # Button to check weather
-check_weather_btn = ttk.Button(root, text="Check Weather", command=get_current_weather)
+check_weather_btn = ttk.Button(root, text="Check Weather", command=show_current)
 check_weather_btn.pack(pady=10)
 
 # Button to check forecast
-check_forecast_btn = ttk.Button(root, text="Check Forecast", command=get_forecast_weather)
+check_forecast_btn = ttk.Button(root, text="Check Forecast", command=show_forecast)
 check_forecast_btn.pack(pady=10)
 
 # Label to display result
